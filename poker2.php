@@ -1,5 +1,1 @@
-//spades
-//hearts
-//diams
-//clubs
-
+//spades//hearts//diamomds//clubs
