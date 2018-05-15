@@ -7,12 +7,15 @@
  */
 
 class Member{
-    private $id, $name, $accont, $passwd;
+//    private $id, $name, $accont, $passwd;
+//
+//    function __get($name){
+//    return $this->$name;
+//    }
+//    function __set($name, $value){
+//        $this->$name = $value;
+//    }
+    function setCar(){
 
-    function __get($name){
-    return $this->$name;
-    }
-    function __set($name, $value){
-        $this->$name = $value;
     }
 }

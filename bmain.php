@@ -1,15 +1,36 @@
 <?php
     include_once 'sql.php' ;
     include_once 'Product.php';
+    include_once  'myconfig.php';
 
     if(isset($_REQUEST['delid'])){
         $delid =$_REQUEST['delid'];
         $sql=" delete from product where id={$delid}";
         $mysqli->query($sql);
     }
+//        $sql = 'select count(*) as `sum` from product ';
+//        $result = $mysqli->query($sql);
+//        $data = $result->fetch_object();
+//        $sum = $data['sum'];
 
-    $sql=' select * from product';
-    $result = $mysqli->query($sql);
+        $sql = 'select id from product';
+        $result = $mysqli->query($sql);
+        $sum = $result->num_rows;
+
+        $page = 1;
+        if (isset($_REQUEST['page'])){
+            $page = $_REQUEST['page'];
+        }
+
+        $total = ceil($sum/rpp);
+        $prev = $page==1?1:$page-1;
+        $next = $page==$total?$total:$page+1;
+
+
+        $start = ($page-1)*rpp;
+        $sql = " select * from product order by id limit {$start}," . rpp;
+        $result = $mysqli->query($sql);
+
 
 ?>
 
@@ -34,7 +55,7 @@ Product List:<br>
     <?php
     while($product = $result->fetch_object('Product')){
         echo'<tr>';
-        echo"<td>{$product->id}</td>";
+        echo"<td>{$product->id}<a href=\"showImage.php\">圖片</a></td>";
         echo"<td>{$product->pname}</td>";
         echo"<td>{$product->price}</td>";
         echo"<td>{$product->qty}</td>";
@@ -45,3 +66,8 @@ Product List:<br>
     }
     ?>
 </table>
+<hr>
+
+<a href="?page=<?php echo $prev; ?>">prev</a>
+<?php echo  '第'.$page.'頁 '; ?>
+<a href="?page=<?php echo $next; ?>">next</a>

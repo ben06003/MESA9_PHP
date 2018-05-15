@@ -146,3 +146,4 @@ class Member{
         $this->$fname=$value;
     }
 }
+

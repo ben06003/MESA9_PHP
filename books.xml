@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<book>
+    <book isbn="12345678" price="100">
+        <title>PHP 大全</title>
+        <authous>
+            <author>Brad</author>
+            <author>Vincent</author>
+        </authous>
+        <description>
+            全世界最好的書
+        </description>
+    </book>
+    <book isbn="87654321" price="90">
+        <title>PHP 垃圾</title>
+        <authous>
+            <author>Brad</author>
+        </authous>
+        <description>
+            全世界最垃圾的書
+        </description>
+    </book>
+</book>

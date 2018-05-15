@@ -37,3 +37,18 @@ class Test12 extends  Test1{
     }
 
 }
+
+class Student{
+    private $ch, $eng, $math;
+    function __construct($ch,$eng,$math){
+        $this->ch=$ch;
+        $this->eng=$eng;
+        $this->math=$math;
+    }
+    function calSu(){
+        return $this->ch+$this->math+$this->eng;
+    }
+    function calAvg(){
+        return $this->calSu()/3;
+    }
+}

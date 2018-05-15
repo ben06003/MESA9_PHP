@@ -1,0 +1,54 @@
+<!DOCTYPE HTML>
+
+<html>
+<head>
+
+    <script type = "text/javascript">
+
+        var ws = new WebSocket("ws://localhost:8080");
+        WebSocketTest();
+        function WebSocketTest() {
+            if ("WebSocket" in window) {
+                //alert("WebSocket is supported by your Browser!");
+                // Let us open a web socket
+                ws.onopen = function() {
+                    // Web Socket is connected, send data using send()
+                    ws.send("Message to send");
+                    alert("Message is sent...");
+                };
+                ws.onmessage = function (evt) {
+                    var received_msg = evt.data;
+                    alert("Message is received..." + received_msg);
+                };
+                ws.onclose = function() {
+                    // websocket is closed.
+                    alert("Connection is closed...");
+                };
+            } else {
+                // The browser doesn't support WebSocket
+                alert("WebSocket NOT supported by your Browser!");
+            }
+        }
+
+        var space =[];
+        function test1() {
+            var input = document.getElementById('input').value;
+            space.push(input)
+            ws.send(JSON.stringify(input));
+            document.getElementById('view').innerHTML = space;
+        }
+
+    </script>
+
+</head>
+
+<body>
+<div id = "sse">
+
+</div>
+<div id="view"></div>
+<input type="text" id="input" />
+<input type="button" onclick="test1()" value="send" />
+
+</body>
+</html>
