@@ -7,7 +7,7 @@
         if (xhttp.readyState == 4 && xhttp.status == 200){
             var ret = xhttp.responseText;
             if (ret != 0){
-                document.getElementById('mesg').innerHTML = 'XXX';
+                document.getElementById('mesg').innerHTML = '此帳號有人使用';
             }else{
                 document.getElementById('mesg').innerHTML = '此帳號可以使用';
             }
@@ -20,9 +20,12 @@
     }
 
     function checkNewAccount() {
-        if(document.getElementById('mesg').innerHTML == 'XXX'){
-            alert("請輸入正確資料");
-        }else{<?php
+        if(document.getElementById('mesg').innerHTML == '此帳號有人使用'){
+            alert('請kkkk變更使用帳號');
+        }else{
+            alert('iiii');
+            <?php
+
             if(isset($_REQUEST['account'])){
             $account = $_REQUEST['account'];
             $passwd = password_hash($_REQUEST['passwd'],
@@ -36,13 +39,15 @@
             $sql = "insert into `member` (`account`,`passwd`,`nickname`,`icon`)".
             "values ('{$account}','{$passwd}','{$nickname}','{$icon}')";
 
-
+            echo $sql;
             if ($mysqli->query($sql)){
-                header('Location: login.html');
+                echo $sql;
+//                header('Location: login.html');
             }else{
                 echo 'insert error';
             }
-        }?>
+
+            }?>
         }
     }
 </script>
@@ -51,9 +56,8 @@
     帳號：<input type="text" id="account" name="account" onchange="isNewAccount()"/>
     <span id="mesg"></span><br>
     密碼：<input type="password" name="passwd"/><br>
-    論壇名稱：<input type="text" name="nickname"/><br>
+    暱稱：<input type="text" name="nickname"/><br>
     頭像：<input type="file" name="icon"  accept="image/gif, image/jpeg, image/png"/><br>
-    頭像預載：<br>
-    <img id="preview_progressbarTW_img" src="#" /><br>
+
     <input type="submit" value="確認" onclick="checkNewAccount()">
 </form>

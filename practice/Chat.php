@@ -12,33 +12,59 @@ class Chat implements MessageComponentInterface {
         $this->clients = new \SplObjectStorage;
     }
 
-    public function onOpen(ConnectionInterface $conn) {
+    public function onOpen(ConnectionInterface $conn)
+    {
         $this->clients->attach($conn);
-
-
+        $this->users[$conn->resourceId] = $conn;
+        $numRecv = count($this->users);
+        $msg = '<br>'.'在線人數'.':'.$numRecv;
+        var_dump($numRecv);
+        $online = 'online';
+        $conn->send(json_encode(array("type" => $online, "msg" => $msg)));
+        foreach($this->clients as $client)
+        {
+            if($conn!=$client)
+            {
+                $client->send(json_encode(array("type"=>$online,"msg"=>$msg)));
+            }
+        }
     }
 
     public function onClose(ConnectionInterface $conn) {
         $this->clients->detach($conn);
-        // unset($this->users[$conn->resourceId]);
+        unset($this->users[$conn->resourceId]);
+        $numRecv = count($this->users);
+        $msg = '<br>'.'在線人數'.':'.$numRecv;
+        var_dump($numRecv);
+        $online = 'online';
+        $conn->send(json_encode(array("type" => $online, "msg" => $msg)));
+        foreach($this->clients as $client)
+        {
+            if($conn!=$client)
+            {
+                $client->send(json_encode(array("type"=>$online,"msg"=>$msg)));
+            }
+        }
     }
 
     public function onMessage(ConnectionInterface $from,  $data) {
+        $numRecv = count($this->users);
+        var_dump($numRecv);
         $from_id = $from->resourceId;
-//        var_dump($from);
         $data = json_decode($data);
         $type = $data->type;
         $img = $data->img;
         switch ($type) {
             case 'socket':
                 $user_id = $data->user_id;
-                $welcome = '歡迎'.$user_id.'加入聊天室'.'<br>';
-                $from->send(json_encode(array("type"=>$type,"msg"=>$welcome,"img"=>$img)));
+                $src = 'data: '.'image/jpeg'.';base64,'.$img;
+                $welcome = '<img src="'.$src.'">'.$user_id.'上線'.'<br>';
+                $from->send(json_encode(array("type"=>$type,"msg"=>$welcome)));
                 foreach($this->clients as $client)
                 {
                     if($from!=$client)
                     {
-                        $client->send(json_encode(array("type"=>$type,"msg"=>$welcome,"img"=>$img)));
+                        $client->send(json_encode(array("type"=>$type,"msg"=>$welcome)));
                     }
                 }
                 break;
@@ -46,15 +72,20 @@ class Chat implements MessageComponentInterface {
             case 'chat':
                 $user_id = $data->user_id;
                 $chat_msg = $data->chat_msg;
-                $response_from = "<span style='color:lightgray'><b>".$user_id.":</b> ".$chat_msg."</span><br>";
-                $response_to = "<b>".$user_id."</b>: ".$chat_msg."<br>";
-                // Output
-                $from->send(json_encode(array("type"=>$type,"msg"=>$response_from,"img"=>$img)));
+                $src = 'data: '.'image/jpeg'.';base64,'.$img;
+                $response_from = '<img src="'.$src.'">'.
+                    "<span style='color:lightgray'><b>".
+                    $user_id.":</b> ".$chat_msg."</span><br>";
+
+                $response_to = '<img src="'.$src.'">'.
+                    "<b>".$user_id."</b>: ".$chat_msg."<br>";
+
+                $from->send(json_encode(array("type"=>$type,"msg"=>$response_from)));
                 foreach($this->clients as $client)
                 {
                     if($from!=$client)
                     {
-                        $client->send(json_encode(array("type"=>$type,"msg"=>$response_to,"img"=>$img)));
+                        $client->send(json_encode(array("type"=>$type,"msg"=>$response_to)));
                     }
                 }
                 break;

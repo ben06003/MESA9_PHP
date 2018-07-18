@@ -4,8 +4,6 @@ include_once 'Member.php';
 session_start();
 $account = $_REQUEST['account'];
 $passwd = $_REQUEST['passwd'];
-$sql = "update member set online='1'"." where account='{$account}'";
-$mysqli->query($sql);
 $sql = "select * from member " .
     "where account=?";
 $stmt = $mysqli->prepare($sql);
@@ -19,6 +17,8 @@ if ($result->num_rows > 0){
 //        echo $member->account . '<br>';
 //        echo $member->passwd . '<br>';
     if (password_verify($passwd , $member->passwd)){
+        $sql = "update member set online='1'"." where account='{$account}'";
+        $mysqli->query($sql);
 //            $cart = new Cart();
 //            $member->setCart($cart);
         $_SESSION['member'] = $member;
